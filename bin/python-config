@@ -1,4 +1,4 @@
-#!/home/ltnewberry/Documents/lslide_classification/bin/python
+#!/home/ltnewberry/Documents/TweetClassifier/bin/python
 
 import sys
 import getopt

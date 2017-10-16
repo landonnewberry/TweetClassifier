@@ -36,7 +36,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/ltnewberry/Documents/lslide_classification"
+set -gx VIRTUAL_ENV "/home/ltnewberry/Documents/TweetClassifier"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

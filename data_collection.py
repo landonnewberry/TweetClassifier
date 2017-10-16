@@ -32,7 +32,7 @@ def get_data(value):
 		for line in f:
 			j = json.loads(line)
 			label = j["label"] == "relevant" and 1 or 0
-			data.append([str.lower(j["text"]), label])
+			data.append([str.lower(j["text"]), label, int(j["id_str"])])
 
 #	data["binary_label"] = data.apply(lambda row: row["label"] == "relevant" and 1 or 0, axis=1)
 	list_text = data[0]
@@ -53,7 +53,7 @@ def get_data(value):
 
 	return (data, sentences)
 
-
+"""
 def get_average_vectors(model, sentences, tfidf):
 	avg_vectors = []
 	for sentence in sentences:
@@ -63,7 +63,7 @@ def get_average_vectors(model, sentences, tfidf):
 			avg_vectors.append([])
 	return avg_vectors
 
-
+"""
 
 
 

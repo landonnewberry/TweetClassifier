@@ -1,4 +1,4 @@
-#!/home/ltnewberry/Documents/lslide_classification/bin/python3.5
+#!/home/ltnewberry/Documents/TweetClassifier/bin/python3.5
 
 # -*- coding: utf-8 -*-
 import re

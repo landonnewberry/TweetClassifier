@@ -5,6 +5,7 @@ from pandas import DataFrame, Series
 from utils import load_word2vec_model
 from data_collection import get_data
 from sklearn import svm
+from sklearn.metrics import precision_recall_fscore_support
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import StandardScaler
@@ -53,8 +54,11 @@ def get_X_y(analyzer, data, sentences):
 
 if __name__=="__main__":
 
+	REPORT = "report.txt"
+
 	# data[0] -> text
 	# data[1] -> label (1 or 0)
+	# data[2] -> id
 	data, sentences = get_data("train.json")
 
 	model = load_word2vec_model("GoogleNews-vectors-negative300.bin")
@@ -67,13 +71,35 @@ if __name__=="__main__":
 
 	test_data, test_sentences = get_data("test.json")
 	X, y = get_X_y(ta, test_data, test_sentences)
-	
-	correct = 0
-	total = len(X)
+
+
+	test_ids = [item[2] for item in test_data]
+	true_pos = false_pos = true_neg = false_neg = 0
+
+	y_pred = list()
 	for ix, x in enumerate(X):
 		pred = clf.predict(x)
-		if pred == y[ix]:
-			correct += 1
+		y_pred.append(pred)
+		if pred == 1 and y[ix] == 1:
+			true_pos += 1
+		elif pred == 1 and y[ix] != 1:
+			false_pos += 1
+		elif pred == 0 and y[ix] == 0:
+			true_neg += 1
+		else:
+			false_neg += 1
 
+	#precision, recall, fscore, _ = precision_recall_fscore_support(y, y_pred)
 
-	print("%d correct out of %d total... %0.2f percent correct." % (correct, total, (correct / total) * 100))
+	#print("Precision = %.2f, Recall = %.2f, F-Score = %.2f" % (precision, recall, fscore))
+	print("True Pos = %d, False Pos = %d, True Neg = %d, False Neg = %d" % (true_pos, false_pos, true_neg, false_neg))
+	precision = true_pos / (true_pos + false_pos)
+	recall = true_pos / (true_pos + false_neg)
+	f1score = 2 * ((precision * recall) / (precision + recall))
+	print("Precision = %.3f, Recall = %.3f, F1 Score = %.3f" % (precision, recall, f1score))
+
+	with open(REPORT, "w") as f:
+		f.write("True positives: %d\tFalse positives: %d\tTrue negatives: %d\tFalse negatives: %d\n" % (true_pos, false_pos, true_neg, false_neg))
+		f.write("Precision: %f\tRecall: %f\tF1-score: %f\n" % (precision, recall, f1score))
+		for ix, v in enumerate(test_ids):
+			f.write("%d\t%s\n" % (v, (y_pred[ix] == 1 and "relevant" or "irrelevant")))
